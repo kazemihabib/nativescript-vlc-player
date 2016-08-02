@@ -171,28 +171,26 @@ export class VLCComponent implements OnInit,AfterViewInit {
       this.playerSurfaceView = (<View>this.mSurfaceElement.nativeElement).android;
 
       this.libVLC = new this.LibVLC(org.videolan.vlc.util.VLCOptions.getLibOptions());
+      // this.mediaPlayer = new this.MediaPlayer(this.libVLC);
 
-      this.mediaPlayer = new this.MediaPlayer(this.libVLC);
-
-      this.audioManager =  application.android.context.getSystemService(this.AudioManager.AUDIO_SERVICE);
-      console.log('this.AudioManager');
-      console.log(this.AudioManager);
-
-      console.log('this auidoManager');
+      this.audioManager =  this.activity.getSystemService(this.context.AUDIO_SERVICE);
+      console.log('afterView init audioManager');
       console.log(this.audioManager);
-      // this.maxVolume = this.audioManager.getStreamMaxVolume(this.AudioManager.STREAM_MUSIC);
+      this.maxVolume = this.audioManager.getStreamMaxVolume(this.AudioManager.STREAM_MUSIC);
       this.activity.setVolumeControlStream(this.AudioManager.STREAM_MUSIC);
 
       this.currentAspectRatioItem = this.aspectRatioItems[6];
-      this.startPlayback();
     }
 
 
     private startPlayback():void {
-        if (this.mPlaybackStarted || this.mediaPlayer == null) {
+        if (this.mPlaybackStarted) {
             return;
         }
 
+        // we should create new MediaPlayer after each MediaPlayer.release
+        console.log('startPlayback '+ 'mmediaplayer: ' + this.MediaPlayer);
+        this.mediaPlayer = new this.MediaPlayer(this.libVLC);
         let vlcVout:IVLCVout = this.mediaPlayer.getVLCVout();
 
         vlcVout.setVideoView(this.playerSurfaceView);
@@ -266,6 +264,8 @@ export class VLCComponent implements OnInit,AfterViewInit {
       this.lastPosition = this.vlcAction.getPosition() - 5000;
 
       this.mediaPlayer.stop();
+      this.mediaPlayer.release();
+      this.mediaPlayer = null;
 
       this.changeAudioFocus(false);
 
@@ -614,54 +614,60 @@ export class VLCComponent implements OnInit,AfterViewInit {
           return this.mediaPlayer != null && this.mediaPlayer.isPlaying();
       },
 
-     play : ():void => {
-        if (this.mediaPlayer != null) {
+      play : ():void => {
+          if(this.mediaPlayer != null)
             this.mediaPlayer.play();
-        }
-    },
+          else
+            this.startPlayback();
+      },
 
-    pause : () : void => {
-        if (this.mediaPlayer != null) {
-            this.mediaPlayer.pause();
-        }
-    },
+      stop : ():void =>{
+        this.stopPlayback()
+      },
 
-    seek:( position:number):void => {
-        if (this.mediaPlayer != null) {
-            let length : number = this.mediaPlayer.getLength();
-            if (length == 0) {
-                this.mediaPlayer.setTime(position);
-            } else {
-                this.mediaPlayer.setPosition(position / length);
-            }
-        }
-    },
+      pause : () : void => {
+          if (this.mediaPlayer != null) {
+              this.mediaPlayer.pause();
+          }
+      },
 
-    volumeUp:():any => {
-        let __this = this;
-        if (this.audioManager != null) {
-            let currentVolume : number = this.audioManager.getStreamVolume(this.AudioManager.STREAM_MUSIC);
-            currentVolume = Math.min(currentVolume + 1, this.maxVolume);
-            this.audioManager.setStreamVolume(this.AudioManager.STREAM_MUSIC, currentVolume, 0);
-            return {
-              'currentVolume':currentVolume,
-              'maxVolum':__this.maxVolume
-            }
-        }
-    },
+      seek:( position:number):void => {
+          if (this.mediaPlayer != null) {
+              let length : number = this.mediaPlayer.getLength();
+              if (length == 0) {
+                  this.mediaPlayer.setTime(position);
+              } else {
+                  this.mediaPlayer.setPosition(position / length);
+              }
+          }
+      },
 
-    volumeDown():any {
-        let __this = this;
-        if (this.audioManager != null) {
-            let currentVolume = this.audioManager.getStreamVolume(this.AudioManager.STREAM_MUSIC);
-            currentVolume = Math.max(currentVolume - 1, 0);
-            this.audioManager.setStreamVolume(this.AudioManager.STREAM_MUSIC, currentVolume, 0);
-            return {
-              'currentVolume':currentVolume,
-              'maxVolum':__this.maxVolume
-            }
-        }
-    }
+      volumeUp:():any => {
+          let __this = this;
+          if (this.audioManager != null) {
+              let currentVolume : number = this.audioManager.getStreamVolume(this.AudioManager.STREAM_MUSIC);
+              currentVolume = Math.min(currentVolume + 1, this.maxVolume);
+              this.audioManager.setStreamVolume(this.AudioManager.STREAM_MUSIC, currentVolume, 0);
+              return {
+                'currentVolume':currentVolume,
+                'maxVolum':__this.maxVolume
+              }
+          }
+      },
+
+      volumeDown:():any => {
+          let __this = this;
+          if (this.audioManager != null) {
+              let currentVolume = this.audioManager.getStreamVolume(this.AudioManager.STREAM_MUSIC);
+              currentVolume = Math.max(currentVolume - 1, 0);
+              this.audioManager.setStreamVolume(this.AudioManager.STREAM_MUSIC, currentVolume, 0);
+              console.log('currentVolume' + currentVolume);
+              return {
+                'currentVolume':currentVolume,
+                'maxVolum':__this.maxVolume
+              }
+          }
+      }
 };
 
 }
