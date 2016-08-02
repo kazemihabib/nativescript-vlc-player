@@ -1,11 +1,16 @@
 # nativescript-vlc-player
 nativescript vlc player plugin for NS-Angular2
 
-`NOT READY YET`
+`THIS PLUGIN IS NOT READY YET`
+# How To Run Demo:
+    clone this project and run `tns run android`
+#  How to use in plugin in your project:
+    1 - Copy `nativescript-vlc-plugin` in your `app` folder 
+    2 - Copy `VLCOptions.java`(https://github.com/kazemihabib/nativescript-vlc-player/blob/master/VLCOptions.java) to `platforms/android/src/main/java/org/videolan/vlc/util/VLCOptions.java`.
+    3 - Add this to your template `<vlc></vlc>`
 
-copy `VLCOptions.java` to `platforms/android/src/main/java/org/videolan/vlc/util/VLCOptions.java`.
 
-  ## TODO:
+## TODO:
   ```
     1-handle audio tracks
     2-add PlayerControl
@@ -19,9 +24,9 @@ copy `VLCOptions.java` to `platforms/android/src/main/java/org/videolan/vlc/util
   ```
 
 
-  ## ISSUES:
+## ISSUES:
   ```
-    1-AspectRatio becomes Original Surface when orientation
+    1-AspectRatio becomes Original Surface after orientation
     2-Media Events and MediaPlayer Events throw exception !!
 
   ```
