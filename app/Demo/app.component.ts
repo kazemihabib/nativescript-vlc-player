@@ -22,4 +22,13 @@ export class AppComponent implements AfterViewInit{
       this.vlcAction = this.vlc.getVLCAction();
     }
 
+    public up(){
+      let obj = this.vlcAction.volumeUp();
+      console.log('currentVolume :');
+      console.log(obj.currentVolume);
+      console.log('maxVolume');
+      console.log(obj.maxVolume);
+
+    }
+
 }
