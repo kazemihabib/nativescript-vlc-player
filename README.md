@@ -3,7 +3,11 @@ nativescript vlc player plugin for NS-Angular2
 
 `THIS PLUGIN IS NOT READY YET`
 # How To Run Demo:
-    clone this project and run `tns run android`
+    1-  clone this project
+    2-  run `tns platform add android`
+    2 - add `compile "de.mrmaffen:vlc-android-sdk:1.9.8"` to build.gradle
+    4 - Copy `VLCOptions.java`(https://github.com/kazemihabib/nativescript-vlc-player/blob/master/VLCOptions.java) to `platforms/android/src/main/java/org/videolan/vlc/util/VLCOptions.java`.
+    5-run `tns run android`
 #  How to use in plugin in your project:
     1 - add `compile "de.mrmaffen:vlc-android-sdk:1.9.8"` to build.gradle
     2 - Copy `nativescript-vlc-plugin` in your `app` folder
