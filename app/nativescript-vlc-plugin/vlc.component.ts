@@ -53,7 +53,7 @@ type AudioManager = any; //android.media.AudioManager;
 
 @Component({
     selector: "vlc",
-    templateUrl: "vlc.component.html",
+    templateUrl: "./nativescript-vlc-plugin/vlc.component.html",
 })
 export class VLCComponent implements OnInit,AfterViewInit {
 
