@@ -1,6 +1,6 @@
 import {Component,OnInit,ViewChild,ElementRef,AfterViewInit,Input} from "@angular/core";
 import {View} from "ui/core/view";
-import {VLCComponent} from "../vlc-plugin/vlc.component";
+import {VLCComponent} from "../nativescript-vlc-plugin/vlc.component";
 
 @Component({
     selector: "my-app",
