@@ -12,7 +12,7 @@ export class AppComponent implements AfterViewInit{
 
     @ViewChild("vlcElement") vlc: VLCComponent;
     vlcAction;
-    VLC;
+    path:string;
     eventCallback={
         eventHardwareAccelerationError:function(){
           console.log("eventHardwareAccelerationError");

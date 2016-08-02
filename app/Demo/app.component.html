@@ -6,7 +6,9 @@
     <Button text="stop" (tap)="vlcAction.stop()"></Button>
     <Button text="volumeDown" (tap)="vlcAction.volumeDown()"></Button>
   </StackLayout>
+
+  <TextField hint="path" [(ngModel)]="path"></TextField>
   <StackLayout>
-    <vlc #vlcElement [eventCallback] = "eventCallback"></vlc>
+    <vlc #vlcElement [eventCallback] = "eventCallback" [videoPath] = "path"></vlc>
   </StackLayout>
 </StackLayout>

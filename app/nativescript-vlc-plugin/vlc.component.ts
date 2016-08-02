@@ -82,7 +82,6 @@ export class VLCComponent implements OnInit,AfterViewInit {
 
     private mPlaybackStarted:boolean = false;
 
-    public videoPath:string = '/sdcard/Download/si.mkv';
     private lastPosition:number;
 
     private mVideoHeight:number;
@@ -142,10 +141,14 @@ export class VLCComponent implements OnInit,AfterViewInit {
 
 
     mHasAudioFocus : boolean = false;
+    //@Inputs
 
     @Input()
     public eventCallback:IEventCallback;
+    @Input()
+    public videoPath:string;
 
+    //////////////////////////////////////////
     @ViewChild("surface") mSurfaceElement: ElementRef;
 
 
