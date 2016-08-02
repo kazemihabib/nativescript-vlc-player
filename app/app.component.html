@@ -1,0 +1,8 @@
+<StackLayout>
+  <Button text="play" (tap)="vlcAction.play()"></Button>
+  <Button text="pause" (tap)="vlcAction.pause()"></Button>
+  <Button text="seek" (tap)="vlcAction.seek(vlcAction.getPosition()+5000)"></Button>
+  <StackLayout>
+    <vlc #vlc [eventCallback] = "eventCallback"></vlc>
+  </StackLayout>
+</StackLayout>
