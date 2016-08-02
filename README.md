@@ -1,7 +1,9 @@
 # nativescript-vlc-player
 nativescript vlc player plugin for NS-Angular2
 
-NOT READY YET
+`NOT READY YET`
+
+copy `VLCOptions.java` to `platforms/android/src/main/java/org/videolan/vlc/util/VLCOptions.java`.
 
   ## TODO:
   ```
@@ -21,5 +23,5 @@ NOT READY YET
   ```
     1-AspectRatio becomes Original Surface when orientation
     2-Media Events and MediaPlayer Events throw exception !!
-    
+
   ```
