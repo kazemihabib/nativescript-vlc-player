@@ -2,6 +2,7 @@
 nativescript vlc player plugin for NS-Angular2
 
 `THIS PLUGIN IS NOT READY YET`
+
 # How To Run Demo:
     1-  clone this project
     2-  run `tns platform add android`
@@ -32,6 +33,5 @@ nativescript vlc player plugin for NS-Angular2
 ## ISSUES:
   ```
     1-AspectRatio becomes Original Surface after orientation
-    2-Media Events and MediaPlayer Events throw exception !!
-
+    2-TO FIX THIS ISSUE USE android@next ~~Media Events and MediaPlayer Events throw exception !!~~
   ```
