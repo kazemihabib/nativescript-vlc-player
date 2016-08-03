@@ -177,8 +177,8 @@ export class VLCComponent implements OnInit,AfterViewInit {
       // this.mediaPlayer = new this.MediaPlayer(this.libVLC);
 
       this.audioManager =  this.activity.getSystemService(this.context.AUDIO_SERVICE);
-      console.log('afterView init audioManager');
-      console.log(this.audioManager);
+      // console.log('afterView init audioManager');
+      // console.log(this.audioManager);
       this.maxVolume = this.audioManager.getStreamMaxVolume(this.AudioManager.STREAM_MUSIC);
       this.activity.setVolumeControlStream(this.AudioManager.STREAM_MUSIC);
 
@@ -192,7 +192,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
         }
 
         // we should create new MediaPlayer after each MediaPlayer.release
-        console.log('startPlayback '+ 'mmediaplayer: ' + this.MediaPlayer);
+        // console.log('startPlayback '+ 'mmediaplayer: ' + this.MediaPlayer);
         this.mediaPlayer = new this.MediaPlayer(this.libVLC);
         let vlcVout:IVLCVout = this.mediaPlayer.getVLCVout();
 
@@ -213,13 +213,15 @@ export class VLCComponent implements OnInit,AfterViewInit {
         this.mPlaybackStarted = true;
         let __this = this;
 
-        this.playerSurfaceView.addOnLayoutChangeListener(this.playerLayoutChangeListener());
+        this.playerSurfaceView.addOnLayoutChangeListener(this.playerLayoutChangeListener);
         this.changeSurfaceLayout();
         //*******************************
         //commented because of
         // ERROR : abstract method not implemented
 
-        // this.mediaPlayer.setEventListener(this.mediaPlayerEventListener());
+        this.mediaPlayer.setEventListener(this.mediaPlayerEventListener);
+        // console.log("mediaPlayerEventListener: ");
+        // console.log(this.mediaPlayerEventListener().onEvent);
         //************************************
 
         const media:Media  = new this.Media(this.libVLC, this.videoPath);
@@ -232,7 +234,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
         // commented because of
         // ERROR : abstract method not implemented
 
-        // media.setEventListener(this.mediaEventListener());
+        media.setEventListener(this.mediaEventListener);
 
         //*********************************************
         this.mediaPlayer.setMedia(media);
@@ -246,17 +248,17 @@ export class VLCComponent implements OnInit,AfterViewInit {
         this.mediaPlayer.play();
     }
 
-    private playerLayoutChangeListener(){
+    private playerLayoutChangeListener = (() => {
         let __this = this;
         return new android.view.View.OnLayoutChangeListener( {
-          onLayoutChange : function( v:View, left:number, top:number, right:number, bottom:number, oldLeft:number, oldTop:number, oldRight:number, oldBottom:number):any {
-              // if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+          onLayoutChange : function ( v:View, left:number, top:number, right:number, bottom:number, oldLeft:number, oldTop:number, oldRight:number, oldBottom:number):any {
+              if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
                   console.log("OnLayoutChangeListener");
                   __this.changeSurfaceLayout();
-              // }
+              }
           }
         });
-      }
+      })();
 
     private stopPlayback():void {
       if (!this.mPlaybackStarted) {
@@ -272,16 +274,15 @@ export class VLCComponent implements OnInit,AfterViewInit {
 
       this.changeAudioFocus(false);
 
-      this.playerSurfaceView.removeOnLayoutChangeListener(this.playerLayoutChangeListener());
+      this.playerSurfaceView.removeOnLayoutChangeListener(this.playerLayoutChangeListener);
 }
 
-  private  mediaEventListener():any{
+  private  mediaEventListener = (():any => {
      let __this = this;
-     let Media = org.videolan.libvlc.Media;
-     return new Media.EventListener({
+     return new this.Media.EventListener({
         onEvent : function(event){
             switch (event.type) {
-                case this.Media.Event.ParsedChanged:
+                case __this.Media.Event.ParsedChanged:
                     console.log("nativescriptVLCPlugin: Media event - ParsedChanged");
                     if (__this.lastPosition > 1000) {
                         __this.mediaPlayer.setTime(__this.lastPosition);
@@ -296,31 +297,37 @@ export class VLCComponent implements OnInit,AfterViewInit {
                     // initAudioTracks();
                     //*************************************
                     break;
-                case Media.Event.MetaChanged:
-                    console.log('hello');
+                case __this.Media.Event.MetaChanged:
+                    // console.log('hello');
                     break;
                 default:
                     break;
             }
         }
   });
-}
-
+})();
 
     private changeAudioFocus( acquire:boolean):void {
         if (this.audioManager == null) {
+            console.log('changeAudioFocus '+ 'shuld return');
             return;
         }
         if (acquire) {
+            console.log('changeAudioFocus '+ 'acquire == true');
             if (!this.mHasAudioFocus) {
-                const result:number = this.audioManager.requestAudioFocus(this.mAudioFocusListener(), this.AudioManager.STREAM_MUSIC, this.AudioManager.AUDIOFOCUS_GAIN);
+                console.log('changeAudioFocus '+ 'mHasAudioFocus  == false');
+                const result:number = this.audioManager.requestAudioFocus(this.mAudioFocusListener, this.AudioManager.STREAM_MUSIC, this.AudioManager.AUDIOFOCUS_GAIN);
                 if (result == this.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                     this.audioManager.setParameters("bgm_state=true");
                     this.mHasAudioFocus = true;
                 }
             }
         } else {
+
+            console.log('changeAudioFocus '+ 'acquire == false');
             if (this.mHasAudioFocus) {
+
+                console.log('changeAudioFocus '+ 'mHasAudioFocus == true');
                 this.audioManager.abandonAudioFocus(this.mAudioFocusListener);
                 this.audioManager.setParameters("bgm_state=false");
                 this.mHasAudioFocus = false;
@@ -329,7 +336,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
     }
 
 
-    private mAudioFocusListener(){
+    private mAudioFocusListener = (() => {
       let __this = this;
       return new this.AudioManager.OnAudioFocusChangeListener( {
 
@@ -376,7 +383,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
                   break;
           }
       }
-  })}
+  })})();
 
 
 
@@ -385,7 +392,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
       let __this = this;
       return new this.IVLCVout.Callback({
         onNewLayout:function( vlcVout:IVLCVout, width:number, height:number, visibleWidth:number, visibleHeight:number, sarNum:number, sarDen:number){
-          console.log("onNew Layout");
+          // console.log("onNew Layout");
            if (width * height == 0) {
               return;
            }
@@ -407,7 +414,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
       })
     }
 
-    private mediaPlayerEventListener(){
+    private mediaPlayerEventListener = (() => {
       let __this = this;
 
       return new this.MediaPlayer.EventListener({
@@ -479,7 +486,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
             }
         }
     })
-  }
+  })();
 
 
     ngOnInit(){
@@ -496,12 +503,12 @@ export class VLCComponent implements OnInit,AfterViewInit {
 
 
     private changeSurfaceLayout():void {
-        console.log('changeSurfaceLayout');
+        // console.log('changeSurfaceLayout');
         let sw:number = this.activity.getWindow().getDecorView().getWidth();
         let sh:number = this.activity.getWindow().getDecorView().getHeight();
 
-        console.log('sw' + sw);
-        console.log('sh' + sh);
+        // console.log('sw' + sw);
+        // console.log('sh' + sh);
 
         if (this.mediaPlayer != null) {
             this.mediaPlayer.getVLCVout().setWindowSize(sw, sh);
@@ -511,7 +518,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
         let dh : number = sh;
 
         let isPortrait:boolean = this.activity.getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT;
-        console.log('isPortrait' + isPortrait);
+        // console.log('isPortrait' + isPortrait);
         if (sw > sh && this.activity.isPortrait || sw < sh && !isPortrait) {
             dw = sh;
             dh = sw;
@@ -538,7 +545,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
         // compute the display aspect ratio
         let dar:number = dw / dh;
 
-        console.log('in changeSurfaceLayout : ' + this.currentAspectRatioItem.value);
+        // console.log('in changeSurfaceLayout : ' + this.currentAspectRatioItem.value);
         switch (this.currentAspectRatioItem != null ? this.currentAspectRatioItem.value : this.SURFACE_BEST_FIT) {
             case this.SURFACE_BEST_FIT:
                 if (dar < ar)
@@ -580,7 +587,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
         lp.height = Math.ceil(dh * this.mVideoHeight / this.mVideoVisibleHeight);
         // lp.width = 1289;
         // lp.height = 720;
-        console.log('lp.width '+  lp.width + 'lp.heigh ' + lp.height);
+        // console.log('lp.width '+  lp.width + 'lp.heigh ' + lp.height);
         this.playerSurfaceView.setLayoutParams(lp);
         //****************************
         //TODO:
@@ -664,7 +671,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
               let currentVolume = this.audioManager.getStreamVolume(this.AudioManager.STREAM_MUSIC);
               currentVolume = Math.max(currentVolume - 1, 0);
               this.audioManager.setStreamVolume(this.AudioManager.STREAM_MUSIC, currentVolume, 0);
-              console.log('currentVolume' + currentVolume);
+              // console.log('currentVolume' + currentVolume);
               return {
                 'currentVolume':currentVolume,
                 'maxVolume':__this.maxVolume
