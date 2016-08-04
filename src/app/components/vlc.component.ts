@@ -185,6 +185,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
 
 
     private startPlayback():void {
+        console.log('startPlayback is called');
         if (this.mPlaybackStarted) {
             return;
         }
@@ -205,7 +206,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
 
         //*****************************************
 
-        vlcVout.addCallback(this.IVLCVout_callback());
+        vlcVout.addCallback(this.IVLCVout_callback);
         vlcVout.attachViews();
 
         this.mPlaybackStarted = true;
@@ -273,6 +274,21 @@ export class VLCComponent implements OnInit,AfterViewInit {
       this.changeAudioFocus(false);
 
       this.playerSurfaceView.removeOnLayoutChangeListener(this.playerLayoutChangeListener);
+      let vlcVout:IVLCVout = this.mediaPlayer.getVLCVout();
+
+      vlcVout.removeCallback(this.IVLCVout_callback);
+      if(vlcVout.areViewsAttached()){
+          vlcVout.detachViews();
+      }
+
+      let media = this.mediaPlayer.getMedia();
+      if (media != null) {
+          media.setEventListener(null);
+          this.mediaPlayer.setEventListener(null);
+          this.mediaPlayer.stop();
+          this.mediaPlayer.setMedia(null);
+          media.release();
+      }
 }
 
   private  mediaEventListener = (():any => {
@@ -386,7 +402,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
 
 
 
-    private IVLCVout_callback(){
+    private IVLCVout_callback = (()=>{
       let __this = this;
       return new this.IVLCVout.Callback({
         onNewLayout:function( vlcVout:IVLCVout, width:number, height:number, visibleWidth:number, visibleHeight:number, sarNum:number, sarDen:number){
@@ -410,7 +426,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
             __this.eventCallback.eventHardwareAccelerationError();
         }
       })
-    }
+    })();
 
     private mediaPlayerEventListener = (() => {
       let __this = this;
