@@ -259,7 +259,8 @@ export class VLCComponent implements OnInit,AfterViewInit {
         });
       })();
 
-    private stopPlayback():void {
+    public stopPlayback():void {
+      console.log('stopPlayback is called');
       if (!this.mPlaybackStarted) {
           return;
       }
@@ -267,10 +268,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
 
       this.lastPosition = this.vlcAction.getPosition() - 5000;
 
-      this.mediaPlayer.stop();
-      this.mediaPlayer.release();
-      this.mediaPlayer = null;
-
+      // this.mediaPlayer.stop();
       this.changeAudioFocus(false);
 
       this.playerSurfaceView.removeOnLayoutChangeListener(this.playerLayoutChangeListener);
@@ -289,6 +287,8 @@ export class VLCComponent implements OnInit,AfterViewInit {
           this.mediaPlayer.setMedia(null);
           media.release();
       }
+      this.mediaPlayer.release();
+      this.mediaPlayer = null;
 }
 
   private  mediaEventListener = (():any => {
