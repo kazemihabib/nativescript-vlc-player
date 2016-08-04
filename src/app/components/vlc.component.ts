@@ -3,7 +3,7 @@
   1-handle audio tracks
   2-add PlayerControl
   3-subtitleSurfaceView
-  4-getter setters for lastPosition , path , ...
+  4-getter setters for lastPosition , ...
   5-use angular2 event hanling system instead of eventCallback
   6-handle more events help:
   https://code.videolan.org/videolan/vlc-android/blob/master/vlc-android/src/org/videolan/vlc/PlaybackService.java
@@ -13,8 +13,6 @@
 
   ISSUES:
     1-AspectRatio becomes Original Surface when navigation
-    2-Media Events and MediaPlayer Events throw exception !!
-
 */
 import {Component,OnInit,ViewChild,ElementRef,AfterViewInit,Input} from "@angular/core";
 import {View} from "ui/core/view";
@@ -632,7 +630,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
       },
 
       stop : ():void =>{
-        this.stopPlayback()
+        this.mediaPlayer.stop();
       },
 
       pause : () : void => {
