@@ -53,7 +53,7 @@ type AudioManager = any; //android.media.AudioManager;
     selector: "vlc",
     templateUrl: "./components/vlc.component.html",
 })
-export class VLCComponent implements OnInit,AfterViewInit {
+export class VLCComponent implements OnInit{
 
     // imports
     private activity:any = application.android.foregroundActivity;
@@ -148,39 +148,14 @@ export class VLCComponent implements OnInit,AfterViewInit {
     public lastPosition:number;
 
     //////////////////////////////////////////
-    @ViewChild("surface") mSurfaceElement: ElementRef;
 
 
     public getVLCAction(){
       return this.vlcAction;
     }
-    ngAfterViewInit() {
 
-        if (!this.VLCUtil.hasCompatibleCPU(this.activity.getBaseContext())) {
-            console.log("nativescriptVLCPlugin: Compatible cpu error.")
-            this.eventCallback.compatibleCpuError();
-            return;
-        }
-
-       this.LibVLC.setOnNativeCrashListener(new this.LibVLC.OnNativeCrashListener({
-            onNativeCrash :function() {
-            console.log("nativescriptVLCPlugin: Native crash.");
-            this.eventCallback.nativeCrashError();
-            }
-        }))
-
-      this.playerSurfaceView = (<View>this.mSurfaceElement.nativeElement).android;
-
-      this.libVLC = new this.LibVLC(org.videolan.vlc.util.VLCOptions.getLibOptions());
-      // this.mediaPlayer = new this.MediaPlayer(this.libVLC);
-
-      this.audioManager =  this.activity.getSystemService(this.context.AUDIO_SERVICE);
-      // console.log('afterView init audioManager');
-      // console.log(this.audioManager);
-      this.maxVolume = this.audioManager.getStreamMaxVolume(this.AudioManager.STREAM_MUSIC);
-      this.activity.setVolumeControlStream(this.AudioManager.STREAM_MUSIC);
-
-      this.currentAspectRatioItem = this.aspectRatioItems[6];
+    onLoaded(surface){
+      this.playerSurfaceView = surface.android;
     }
 
 
@@ -501,6 +476,26 @@ export class VLCComponent implements OnInit,AfterViewInit {
 
     ngOnInit(){
       this.init = true;
+      if (!this.VLCUtil.hasCompatibleCPU(this.activity.getBaseContext())) {
+          console.log("nativescriptVLCPlugin: Compatible cpu error.")
+          this.eventCallback.compatibleCpuError();
+          return;
+      }
+
+     this.LibVLC.setOnNativeCrashListener(new this.LibVLC.OnNativeCrashListener({
+          onNativeCrash :function() {
+          console.log("nativescriptVLCPlugin: Native crash.");
+          this.eventCallback.nativeCrashError();
+          }
+      }))
+
+    this.libVLC = new this.LibVLC(org.videolan.vlc.util.VLCOptions.getLibOptions());
+
+    this.audioManager =  this.activity.getSystemService(this.context.AUDIO_SERVICE);
+    this.maxVolume = this.audioManager.getStreamMaxVolume(this.AudioManager.STREAM_MUSIC);
+    this.activity.setVolumeControlStream(this.AudioManager.STREAM_MUSIC);
+
+    this.currentAspectRatioItem = this.aspectRatioItems[6];
     }
 
     // create SurfaceView
