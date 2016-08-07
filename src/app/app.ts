@@ -1,53 +1,28 @@
 ﻿import 'reflect-metadata';
-import {Component,OnInit,ViewChild,ElementRef,AfterViewInit,Input} from "@angular/core";
-import application = require("application");
-import {View} from "ui/core/view";
-import {VLCComponent} from "nativescript-ng2-vlc-player/nativescript-ng2-vlc-player";
+import {Component} from "@angular/core";
 import {nativeScriptBootstrap} from "nativescript-angular/application";
+
+import {RouterConfig} from "@angular/router";
+import {nsProvideRouter,NS_ROUTER_DIRECTIVES} from "nativescript-angular/router"
+import {firstPage} from "./pages/first/first.component";
+import {playerPage} from "./pages/player/player.component";
+
+export const routes: RouterConfig = [
+  { path: "", component: firstPage},
+  { path: "player", component: playerPage }
+];
+
+export const APP_ROUTER_PROVIDERS = [
+  nsProvideRouter(routes, {})
+];
 
 @Component({
     selector: "my-app",
-    templateUrl: "./app.html",
-    directives:[VLCComponent]
+    template: "<page-router-outlet></page-router-outlet>",
+    directives: [NS_ROUTER_DIRECTIVES],
 })
 
-export class AppComponent implements AfterViewInit{
-
-    @ViewChild("vlcElement") vlc: VLCComponent;
-    vlcAction;
-    path:string = '/sdcard/Download/si.mkv';
-    eventCallback = {
-        eventHardwareAccelerationError:function(){
-          console.log("eventHardwareAccelerationError");
-        },
-        eventPlaying:function(){
-          console.log('in appComponent : Playing');
-        }
-    }
-    ngAfterViewInit(){
-      this.vlcAction = this.vlc.getVLCAction();
-      // let _this =this;
-      application.android.on(application.AndroidApplication.activityPausedEvent,
-        function (args: application.AndroidActivityEventData) {
-          this.vlc.stopPlayback();
-      },this);
-
-      application.android.on(application.AndroidApplication.activityDestroyedEvent,
-        function (args: application.AndroidActivityEventData) {
-          this.vlc.stopPlayback();
-        },this);
-
-    }
-
-    public up(){
-      let obj = this.vlcAction.volumeUp();
-      console.log('currentVolume :');
-      console.log(obj.currentVolume);
-      console.log('maxVolume');
-      console.log(obj.maxVolume);
-
-    }
-
+export class AppComponent {
 }
 
-nativeScriptBootstrap(AppComponent,[]);
+nativeScriptBootstrap(AppComponent,[APP_ROUTER_PROVIDERS]);
