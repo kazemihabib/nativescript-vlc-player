@@ -80,7 +80,6 @@ export class VLCComponent implements OnInit,AfterViewInit {
 
     private mPlaybackStarted:boolean = false;
 
-    private lastPosition:number;
 
     private mVideoHeight:number;
     private mVideoWidth:number;
@@ -145,6 +144,8 @@ export class VLCComponent implements OnInit,AfterViewInit {
     public eventCallback:IEventCallback;
     @Input()
     public videoPath:string;
+    @Input()
+    public lastPosition:number;
 
     //////////////////////////////////////////
     @ViewChild("surface") mSurfaceElement: ElementRef;
@@ -167,7 +168,6 @@ export class VLCComponent implements OnInit,AfterViewInit {
             this.eventCallback.nativeCrashError();
             }
         }))
-
 
       this.playerSurfaceView = (<View>this.mSurfaceElement.nativeElement).android;
 
@@ -266,7 +266,6 @@ export class VLCComponent implements OnInit,AfterViewInit {
       }
       this.mPlaybackStarted = false;
 
-      this.lastPosition = this.vlcAction.getPosition() - 5000;
 
       // this.mediaPlayer.stop();
       this.changeAudioFocus(false);
@@ -298,10 +297,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
             switch (event.type) {
                 case __this.Media.Event.ParsedChanged:
                     console.log("nativescriptVLCPlugin: Media event - ParsedChanged");
-                    if (__this.lastPosition > 1000) {
                         __this.mediaPlayer.setTime(__this.lastPosition);
-                        __this.lastPosition = 0;
-                    }
                     //**************************
                     //TODO:
 
@@ -312,7 +308,7 @@ export class VLCComponent implements OnInit,AfterViewInit {
                     //*************************************
                     break;
                 case __this.Media.Event.MetaChanged:
-                    // console.log('hello');
+                    console.log('MetaChanged');
                     break;
                 default:
                     break;
