@@ -7,6 +7,6 @@
     <Button text="volumeUp" (tap)="up()"></Button>
   </StackLayout>
   <StackLayout>
-    <vlc #vlcElement [eventCallback] = "eventCallback" [videoPath] = "path" (loaded)="onLoaded(vlcElement)"></vlc>
+    <vlc #vlcElement [eventCallback] = "eventCallback" [videoPath] = "path" [lastPosition]="position" (loaded)="onLoaded(vlcElement)"></vlc>
   </StackLayout>
 </StackLayout>
