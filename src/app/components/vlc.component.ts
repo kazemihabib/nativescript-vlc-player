@@ -3,7 +3,6 @@
   1-handle audio tracks
   2-add PlayerControl
   3-subtitleSurfaceView
-  4-getter setters for lastPosition , ...
   5-use angular2 event hanling system instead of eventCallback
   6-handle more events help:
   https://code.videolan.org/videolan/vlc-android/blob/master/vlc-android/src/org/videolan/vlc/PlaybackService.java
@@ -138,6 +137,8 @@ export class VLCComponent implements OnInit{
 
 
     mHasAudioFocus : boolean = false;
+    private _lastPosition:number = 0;
+    get lastPosition(){return this._lastPosition};
     //@Inputs
 
     @Input()
@@ -145,7 +146,9 @@ export class VLCComponent implements OnInit{
     @Input()
     public videoPath:string;
     @Input()
-    public lastPosition:number;
+    set lastPosition(lastPosition: number) {
+      this._lastPosition = (lastPosition * 1) ? lastPosition * 1 : 0;
+    }
 
     //////////////////////////////////////////
 
@@ -241,6 +244,8 @@ export class VLCComponent implements OnInit{
       }
       this.mPlaybackStarted = false;
 
+      this.lastPosition = this.vlcAction.getPosition();
+
 
       // this.mediaPlayer.stop();
       this.changeAudioFocus(false);
@@ -272,7 +277,7 @@ export class VLCComponent implements OnInit{
             switch (event.type) {
                 case __this.Media.Event.ParsedChanged:
                     console.log("nativescriptVLCPlugin: Media event - ParsedChanged");
-                        __this.mediaPlayer.setTime(__this.lastPosition);
+                    __this.mediaPlayer.setTime(__this.lastPosition);
                     //**************************
                     //TODO:
 
