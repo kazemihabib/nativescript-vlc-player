@@ -97,7 +97,7 @@ export class VLCComponent implements OnInit{
     private  SURFACE_4_3 : number= 5;
     private  SURFACE_ORIGINAL :number = 6;
 
-    private currentAspectRatioItem : any ;
+    private _currentAspectRatioItem : any = null;
 
     private libVLC : any;
     private audioManager : AudioManager;
@@ -139,6 +139,7 @@ export class VLCComponent implements OnInit{
     mHasAudioFocus : boolean = false;
     private _lastPosition:number = 0;
     get lastPosition(){return this._lastPosition};
+    public getCurrentAspectRatioItem(){return this._currentAspectRatioItem};
     //@Inputs
 
     @Input()
@@ -148,6 +149,14 @@ export class VLCComponent implements OnInit{
     @Input()
     set lastPosition(lastPosition: number) {
       this._lastPosition = (lastPosition * 1) ? lastPosition * 1 : 0;
+    }
+
+    @Input()
+    set aspectRatio(aspectRatio:any){
+        let itemNumber = (aspectRatio * 1) ? aspectRatio * 1 : 0;
+        this._currentAspectRatioItem = this.aspectRatioItems[itemNumber % 7];
+        if(this.mPlaybackStarted)
+          this.changeSurfaceLayout();
     }
 
     //////////////////////////////////////////
@@ -500,7 +509,7 @@ export class VLCComponent implements OnInit{
     this.maxVolume = this.audioManager.getStreamMaxVolume(this.AudioManager.STREAM_MUSIC);
     this.activity.setVolumeControlStream(this.AudioManager.STREAM_MUSIC);
 
-    this.currentAspectRatioItem = this.aspectRatioItems[6];
+    this.aspectRatio = 0;
     }
 
     // create SurfaceView
@@ -555,8 +564,7 @@ export class VLCComponent implements OnInit{
         // compute the display aspect ratio
         let dar:number = dw / dh;
 
-        // console.log('in changeSurfaceLayout : ' + this.currentAspectRatioItem.value);
-        switch (this.currentAspectRatioItem != null ? this.currentAspectRatioItem.value : this.SURFACE_BEST_FIT) {
+        switch (this.getCurrentAspectRatioItem() != null ? this.getCurrentAspectRatioItem().value : this.SURFACE_BEST_FIT) {
             case this.SURFACE_BEST_FIT:
                 if (dar < ar)
                     dh = dw / ar;

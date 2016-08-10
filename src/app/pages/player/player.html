@@ -5,8 +5,11 @@
     <Button text="seek 5s" (tap)="vlcAction.seek(vlcAction.getPosition()+5000)"></Button>
     <Button text="stop" (tap)="vlcAction.stop()"></Button>
     <Button text="volumeUp" (tap)="up()"></Button>
+    <Button text="aspectRatio" (tap)="changeAspectRatio()"></Button>
   </StackLayout>
   <StackLayout>
-    <vlc #vlcElement [eventCallback] = "eventCallback" [videoPath] = "path" [lastPosition]="position" (loaded)="onLoaded(vlcElement)"></vlc>
+    <vlc #vlcElement [eventCallback] = "eventCallback" [videoPath] = "path" [lastPosition]="position"
+    [aspectRatio]="currentAspectRatio"
+    (loaded)="onLoaded(vlcElement)"></vlc>
   </StackLayout>
 </StackLayout>

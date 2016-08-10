@@ -18,6 +18,7 @@ export class playerPage implements OnInit{
     private sub:any;
     public path:string;
     public position:number = 0;
+    public currentAspectRatio = 0;
     eventCallback = {
         eventHardwareAccelerationError:function(){
           console.log("eventHardwareAccelerationError");
@@ -84,6 +85,12 @@ export class playerPage implements OnInit{
 
     public save(){
       appSettings.setNumber(this.path, this.position);
+    }
+
+    public changeAspectRatio(){
+      let currentAspectRatio = this.vlc.getCurrentAspectRatioItem();
+      console.log(currentAspectRatio.name);
+      this.currentAspectRatio = (currentAspectRatio.value + 1) % 7;
     }
 
 }
