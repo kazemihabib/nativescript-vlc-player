@@ -6,10 +6,14 @@
     <Button text="stop" (tap)="vlcAction.stop()"></Button>
     <Button text="volumeUp" (tap)="up()"></Button>
     <Button text="aspectRatio" (tap)="changeAspectRatio()"></Button>
+    <DropDown #dd backroundColor="red" [items]="items" (loaded)=dropDownLoaded(dd)
+      [selectedIndex]="selectedIndex" (selectedIndexChange)="onchange(dd.selectedIndex)"
+      row="0" colSpan="2">
+    </DropDown>
   </StackLayout>
   <StackLayout>
     <vlc #vlcElement [eventCallback] = "eventCallback" [videoPath] = "path" [lastPosition]="position"
-    [aspectRatio]="currentAspectRatio"
+    [aspectRatio]="currentAspectRatio" [audioTrack]="currentAudioTrack"
     (loaded)="onLoaded(vlcElement)"></vlc>
   </StackLayout>
 </StackLayout>

@@ -29,7 +29,9 @@ export interface IEventCallback{
   eventEncounteredError?:Function;
   eventTimeChanged?:Function;
   eventPositionChanged?:Function;
-  compatibleCpuError?:Function;
+  eventCompatibleCpuError?:Function;
+  eventParsedChanged?:Function;
+  eventMetaChanged?:Function;
 }
 
 declare var org:any;
@@ -138,8 +140,17 @@ export class VLCComponent implements OnInit{
 
     mHasAudioFocus : boolean = false;
     private _lastPosition:number = 0;
+    private _audioTracks = new Array<{id:number,name:string}>();
+
     get lastPosition(){return this._lastPosition};
     public getCurrentAspectRatioItem(){return this._currentAspectRatioItem};
+    public getCurrentAudioTrack(){
+      if(this.mediaPlayer)
+        return  this.mediaPlayer.getAudioTrack();
+    }
+    public getAudioTracks(){
+      return this._audioTracks;
+    };
     //@Inputs
 
     @Input()
@@ -157,6 +168,13 @@ export class VLCComponent implements OnInit{
         this._currentAspectRatioItem = this.aspectRatioItems[itemNumber % 7];
         if(this.mPlaybackStarted)
           this.changeSurfaceLayout();
+    }
+
+    @Input()
+    set audioTrack(audioTrack:any){
+        let itemNumber = (audioTrack* 1) ? audioTrack* 1 : 1;
+        if(this.mediaPlayer)
+          this.mediaPlayer.setAudioTrack(itemNumber)
     }
 
     //////////////////////////////////////////
@@ -293,11 +311,16 @@ export class VLCComponent implements OnInit{
                     //this changes the seekbar length
                     // updateMediaLength((int) mediaPlayer.getLength());
                     // mediaPlayer.setSpuTrack(-1);
-                    // initAudioTracks();
+                    __this.initAudioTracks();
+
+                    if(__this.eventCallback.eventParsedChanged)
+                      __this.eventCallback.eventParsedChanged();
                     //*************************************
                     break;
                 case __this.Media.Event.MetaChanged:
                     console.log('MetaChanged');
+                    if(__this.eventCallback.eventMetaChanged)
+                      __this.eventCallback.eventMetaChanged();
                     break;
                 default:
                     break;
@@ -492,7 +515,7 @@ export class VLCComponent implements OnInit{
       this.init = true;
       if (!this.VLCUtil.hasCompatibleCPU(this.activity.getBaseContext())) {
           console.log("nativescriptVLCPlugin: Compatible cpu error.")
-          this.eventCallback.compatibleCpuError();
+          this.eventCallback.eventCompatibleCpuError();
           return;
       }
 
@@ -698,4 +721,9 @@ export class VLCComponent implements OnInit{
       }
 };
 
+private initAudioTracks(){
+  let audioTracks = this.mediaPlayer.getAudioTracks();
+  for(let item of audioTracks)
+    this._audioTracks.push({id:item.id,name:item.name});
+ }
 }

@@ -4,6 +4,9 @@ import application = require("application");
 import {VLCComponent} from "nativescript-ng2-vlc-player/nativescript-ng2-vlc-player";
 import {ActivatedRoute} from "@angular/router";
 import appSettings = require("application-settings");
+import {registerElement} from "nativescript-angular/element-registry";
+registerElement("DropDown", () => require("nativescript-drop-down/drop-down").DropDown);
+
 @Component({
     selector: "player",
     templateUrl: "pages/player/player.html",
@@ -19,13 +22,37 @@ export class playerPage implements OnInit{
     public path:string;
     public position:number = 0;
     public currentAspectRatio = 0;
+    public currentAudioTrack = -1;
+    public selectedIndex = 0;
+    public items:Array<number>=[-1];
+    public audioTracks = new Array<{id:number,name:string}>();
+    public dd:any;
     eventCallback = {
         eventHardwareAccelerationError:function(){
           console.log("eventHardwareAccelerationError");
         },
         eventPlaying:function(){
           console.log('in appComponent : Playing');
+        },
+        eventParsedChanged:()=>
+        {
+          this.audioTracks = this.vlc.getAudioTracks();
+          let _current = this.vlc.getCurrentAudioTrack();
+          this.items = [];
+          this.audioTracks.forEach(
+            (element,index,array)=>{
+              this.items.push(element.id);
+              if(element.id == _current)
+                this.selectedIndex = index;
+            }
+          )
+          this.dd.items = this.items;
+          this.dd.selectedIndex = this.selectedIndex;
         }
+    }
+
+    dropDownLoaded(dd){
+      this.dd = dd;
     }
 
     onLoaded(vlc){
@@ -91,6 +118,11 @@ export class playerPage implements OnInit{
       let currentAspectRatio = this.vlc.getCurrentAspectRatioItem();
       console.log(currentAspectRatio.name);
       this.currentAspectRatio = (currentAspectRatio.value + 1) % 7;
+    }
+
+
+    public onchange(indx){
+        this.currentAudioTrack = this.items[indx];
     }
 
 }
