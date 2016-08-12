@@ -288,6 +288,8 @@ export class VLCComponent implements OnInit{
       }
       this.mediaPlayer.release();
       this.mediaPlayer = null;
+
+      this._audioTracks = [];
 }
 
   private  mediaEventListener = (():any => {
