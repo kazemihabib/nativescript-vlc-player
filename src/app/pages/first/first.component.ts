@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
 
 export class firstPage{
 
-   path:string = '/sdcard/Download/si.mkv';
+   path:string = 'file:///sdcard/Download/si.mkv';
      constructor(private _router: Router) {
    }
 

@@ -221,7 +221,7 @@ export class VLCComponent implements OnInit{
         // console.log(this.mediaPlayerEventListener().onEvent);
         //************************************
 
-        const media:Media  = new this.Media(this.libVLC, this.videoPath);
+        const media:Media  = new this.Media(this.libVLC, android.net.Uri.parse(this.videoPath));
         //************************************
         //TODO: get SW or HW from user
         org.videolan.vlc.util.VLCOptions.setMediaOptions(media, 0, org.videolan.vlc.util.VLCOptions.HW_ACCELERATION_AUTOMATIC);
