@@ -27,29 +27,30 @@ export class playerPage implements OnInit{
     public items:Array<number>=[-1];
     public audioTracks = new Array<{id:number,name:string}>();
     public dd:any;
-    eventCallback = {
-        eventHardwareAccelerationError:function(){
-          console.log("eventHardwareAccelerationError");
-        },
-        eventPlaying:function(){
-          console.log('in appComponent : Playing');
-        },
-        eventParsedChanged:()=>
-        {
-          this.audioTracks = this.vlc.getAudioTracks();
-          let _current = this.vlc.audioTrack;
-          this.items = [];
-          this.audioTracks.forEach(
-            (element,index,array)=>{
-              this.items.push(element.id);
-              if(element.id == _current)
-                this.selectedIndex = index;
-            }
-          )
-          this.dd.items = this.items;
-          this.dd.selectedIndex = this.selectedIndex;
-        }
+
+    eventHardwareAccelerationError = function(){
+        console.log("eventHardwareAccelerationError");
     }
+    eventPlaying = function(){
+        console.log('in appComponent : Playing');
+    }
+
+    eventParsedChanged = function(){
+     {
+      this.audioTracks = this.vlc.getAudioTracks();
+      let _current = this.vlc.audioTrack;
+      this.items = [];
+      this.audioTracks.forEach(
+        (element,index,array)=>{
+          this.items.push(element.id);
+          if(element.id == _current)
+            this.selectedIndex = index;
+        }
+      )
+      this.dd.items = this.items;
+      this.dd.selectedIndex = this.selectedIndex;
+    }
+  }
 
     dropDownLoaded(dd){
       this.dd = dd;

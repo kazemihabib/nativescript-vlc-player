@@ -6,26 +6,12 @@
   ISSUES:
     1-AspectRatio becomes Original Surface when navigation
 */
-import {Component,OnInit,ViewChild,ElementRef,AfterViewInit,Input} from "@angular/core";
+import {Component,OnInit,ViewChild,ElementRef,AfterViewInit,Input,Output,EventEmitter} from "@angular/core";
 import {View} from "ui/core/view";
 import placeholder = require("ui/placeholder");
 let application= require("application");
 let platform = require("platform");
 
-
-export interface IEventCallback{
-  eventHardwareAccelerationError?:Function;
-  eventPlaying?:Function;
-  eventPausd?:Function;
-  eventStopped?:Function;
-  eventEndReached?:Function;
-  eventEncounteredError?:Function;
-  eventTimeChanged?:Function;
-  eventPositionChanged?:Function;
-  eventCompatibleCpuError?:Function;
-  eventParsedChanged?:Function;
-  eventMetaChanged?:Function;
-}
 
 declare var org:any;
 declare var java:any;
@@ -143,8 +129,6 @@ export class VLCComponent implements OnInit{
     //@Inputs
 
     @Input()
-    public eventCallback:IEventCallback;
-    @Input()
     public videoPath:string;
     @Input()
     set lastPosition(lastPosition: number) {
@@ -168,6 +152,23 @@ export class VLCComponent implements OnInit{
       if(this.mediaPlayer)
         return  this.mediaPlayer.getAudioTrack();
     }
+
+
+    //@Outputs
+
+
+    @Output() eventHardwareAccelerationError = new EventEmitter();
+    @Output() eventPlaying = new EventEmitter();
+    @Output() eventPausd = new EventEmitter();
+    @Output() eventStopped = new EventEmitter();
+    @Output() eventEndReached = new EventEmitter();
+    @Output() eventEncounteredError = new EventEmitter();
+    @Output() eventTimeChanged = new EventEmitter();
+    @Output() eventPositionChanged = new EventEmitter();
+    @Output() eventCompatibleCpuError = new EventEmitter();
+    @Output() eventNativeCrashError = new EventEmitter();
+    @Output() eventParsedChanged = new EventEmitter();
+    @Output() eventMetaChanged = new EventEmitter(); 
 
     //////////////////////////////////////////
 
@@ -307,14 +308,12 @@ export class VLCComponent implements OnInit{
                     // mediaPlayer.setSpuTrack(-1);
                     __this.initAudioTracks();
 
-                    if(__this.eventCallback.eventParsedChanged)
-                      __this.eventCallback.eventParsedChanged();
+                    __this.eventParsedChanged.emit('');
                     //*************************************
                     break;
                 case __this.Media.Event.MetaChanged:
                     console.log('MetaChanged');
-                    if(__this.eventCallback.eventMetaChanged)
-                      __this.eventCallback.eventMetaChanged();
+                    __this.eventMetaChanged.emit('');
                     break;
                 default:
                     break;
@@ -424,8 +423,7 @@ export class VLCComponent implements OnInit{
         onSurfacesCreated:function(vlcVout:IVLCVout){},
         onSurfacesDestroyed:function(vlcVout:IVLCVout){},
         onHardwareAccelerationError:function( vlcVout:IVLCVout){
-          if(__this.eventCallback.eventHardwareAccelerationError)
-            __this.eventCallback.eventHardwareAccelerationError();
+           __this.eventHardwareAccelerationError.emit('');
         }
       })
     })();
@@ -439,8 +437,7 @@ export class VLCComponent implements OnInit{
             switch (event.type) {
                 case __this.MediaPlayer.Event.Playing:
                     console.log("nativescriptVLCPlugin: MediaPlayer event - Playing");
-                    if(__this.eventCallback.eventPlaying)
-                      __this.eventCallback.eventPlaying();
+                    __this.eventPlaying.emit('');
 
                     __this.changeAudioFocus(true);
 
@@ -452,23 +449,20 @@ export class VLCComponent implements OnInit{
                     break;
                 case __this.MediaPlayer.Event.Paused:
                     console.log("nativescriptVLCPlugin: MediaPlayer event - Paused");
-                    if(__this.eventCallback.eventPausd)
-                      __this.eventCallback.eventPausd();
+                    __this.eventPausd.emit('');
                     // if (vlcAction == getPlayerControl()) {
                         // eventMediaPaused();
                     // }
                     break;
                 case __this.MediaPlayer.Event.Stopped:
                     console.log("nativescriptVLCPlugin: MediaPlayer event - Stopped");
-                    if(__this.eventCallback.eventStopped)
-                      __this.eventCallback.eventStopped();
+                    __this.eventStopped.emit('');
 
                     __this.changeAudioFocus(false);
                     break;
                 case __this.MediaPlayer.Event.EndReached:
                   console.log("nativescriptVLCPlugin: MediaPlayer event - EndReached");
-                  if(__this.eventCallback.eventEndReached)
-                    __this.eventCallback.eventEndReached();
+                    __this.eventEndReached.emit('');
 
                     __this.changeAudioFocus(false);
                     // TODO: video ended
@@ -476,20 +470,17 @@ export class VLCComponent implements OnInit{
                     break;
                 case __this.MediaPlayer.Event.EncounteredError:
                     console.log("nativescriptVLCPlugin: MediaPlayer event - EncounteredError");
-                    if(__this.eventCallback.eventEncounteredError)
-                      __this.eventCallback.eventEncounteredError();
+                    __this.eventEncounteredError.emit('');
                     break;
                 case __this.MediaPlayer.Event.TimeChanged:
-                    if(__this.eventCallback.eventTimeChanged)
-                      __this.eventCallback.eventTimeChanged();
+                    __this.eventTimeChanged.emit('');
                     //****************************************
                     //TODO:
                     // updateSubtitles(vlcAction.getPosition());
                     //***************************************
                     break;
                 case __this.MediaPlayer.Event.PositionChanged:
-                    if(__this.eventCallback.eventPositionChanged)
-                      __this.eventCallback.eventPositionChanged();
+                      __this.eventPositionChanged.emit('');
                     break;
                 case __this.MediaPlayer.Event.Vout:
                     break;
@@ -509,14 +500,16 @@ export class VLCComponent implements OnInit{
       this.init = true;
       if (!this.VLCUtil.hasCompatibleCPU(this.activity.getBaseContext())) {
           console.log("nativescriptVLCPlugin: Compatible cpu error.")
-          this.eventCallback.eventCompatibleCpuError();
+          //parameter is because of error:Supplied parameters do not match any signature of call target
+          this.eventCompatibleCpuError.emit('');
           return;
       }
 
      this.LibVLC.setOnNativeCrashListener(new this.LibVLC.OnNativeCrashListener({
-          onNativeCrash :function() {
+          onNativeCrash :() =>{
           console.log("nativescriptVLCPlugin: Native crash.");
-          this.eventCallback.nativeCrashError();
+          //parameter is because of error:Supplied parameters do not match any signature of call target
+          this.eventNativeCrashError.emit('');
           }
       }))
 

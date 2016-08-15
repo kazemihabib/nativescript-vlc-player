@@ -14,6 +14,10 @@
   <StackLayout>
     <vlc #vlcElement [eventCallback] = "eventCallback" [videoPath] = "path" [lastPosition]="position"
     [aspectRatio]="currentAspectRatio" [audioTrack]="currentAudioTrack"
-    (loaded)="onLoaded(vlcElement)"></vlc>
+    (loaded)="onLoaded(vlcElement)"
+    (eventHardwareAccelerationError)="eventHardwareAccelerationError()"
+    (eventPlaying) = "eventPlaying()"
+    (eventParsedChanged) = "eventParsedChanged()"
+    ></vlc>
   </StackLayout>
 </StackLayout>
