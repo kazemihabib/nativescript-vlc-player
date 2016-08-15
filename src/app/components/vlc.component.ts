@@ -92,13 +92,13 @@ export class VLCComponent implements OnInit{
     private  SURFACE_4_3 : number= 5;
     private  SURFACE_ORIGINAL :number = 6;
 
-    private _currentAspectRatioItem : any = null;
+    private _currentAspectRatioItem : {value:number,name:string} = null;
 
     private libVLC : any;
     private audioManager : AudioManager;
     private AudioManager : AudioManager =  android.media.AudioManager;
     private maxVolume : number;
-    private aspectRatioItems : [{value : any, name : string}] =
+    private aspectRatioItems : [{value : number, name : string}] =
     [
       {
         value: this.SURFACE_BEST_FIT,
@@ -135,13 +135,9 @@ export class VLCComponent implements OnInit{
     private _lastPosition:number = 0;
     private _audioTracks = new Array<{id:number,name:string}>();
 
-    get lastPosition(){return this._lastPosition};
-    public getCurrentAspectRatioItem(){return this._currentAspectRatioItem};
-    public getCurrentAudioTrack(){
-      if(this.mediaPlayer)
-        return  this.mediaPlayer.getAudioTrack();
-    }
-    public getAudioTracks(){
+    get lastPosition():number{return this._lastPosition};
+    public getCurrentAspectRatioItem():{value:number,name:string} {return this._currentAspectRatioItem};
+    public getAudioTracks():{id:number,name:string}[]{
       return this._audioTracks;
     };
     //@Inputs
@@ -152,22 +148,25 @@ export class VLCComponent implements OnInit{
     public videoPath:string;
     @Input()
     set lastPosition(lastPosition: number) {
-      this._lastPosition = (lastPosition * 1) ? lastPosition * 1 : 0;
+      this._lastPosition = lastPosition;
     }
 
     @Input()
-    set aspectRatio(aspectRatio:any){
-        let itemNumber = (aspectRatio * 1) ? aspectRatio * 1 : 0;
-        this._currentAspectRatioItem = this.aspectRatioItems[itemNumber % 7];
+    set aspectRatio(aspectRatio:number){
+        this._currentAspectRatioItem = this.aspectRatioItems[aspectRatio% 7];
         if(this.mPlaybackStarted)
           this.changeSurfaceLayout();
     }
 
     @Input()
-    set audioTrack(audioTrack:any){
-        let itemNumber = (audioTrack* 1) ? audioTrack* 1 : 1;
+    set audioTrack(audioTrack:number){
         if(this.mediaPlayer)
-          this.mediaPlayer.setAudioTrack(itemNumber)
+          this.mediaPlayer.setAudioTrack(audioTrack);
+    }
+
+    get audioTrack():number{
+      if(this.mediaPlayer)
+        return  this.mediaPlayer.getAudioTrack();
     }
 
     //////////////////////////////////////////
@@ -531,7 +530,7 @@ export class VLCComponent implements OnInit{
     }
 
     // create SurfaceView
-    public createVLCSurface(args: any) {
+    public createVLCSurface(args: placeholder.CreateViewEventData) {
       var nativeView = new android.view.SurfaceView(application.android.currentContext);
       args.view = nativeView;
     }
@@ -688,7 +687,7 @@ export class VLCComponent implements OnInit{
           }
       },
 
-      volumeUp:():any => {
+      volumeUp:(): {'currentVolume':number,'maxVolume':number} => {
           let __this = this;
           if (this.audioManager != null) {
               let currentVolume : number = this.audioManager.getStreamVolume(this.AudioManager.STREAM_MUSIC);
@@ -701,7 +700,7 @@ export class VLCComponent implements OnInit{
           }
       },
 
-      volumeDown:():any => {
+      volumeDown:(): {'currentVolume':number,'maxVolume':number} => {
           let __this = this;
           if (this.audioManager != null) {
               let currentVolume = this.audioManager.getStreamVolume(this.AudioManager.STREAM_MUSIC);

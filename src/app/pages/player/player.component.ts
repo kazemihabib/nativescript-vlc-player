@@ -37,7 +37,7 @@ export class playerPage implements OnInit{
         eventParsedChanged:()=>
         {
           this.audioTracks = this.vlc.getAudioTracks();
-          let _current = this.vlc.getCurrentAudioTrack();
+          let _current = this.vlc.audioTrack;
           this.items = [];
           this.audioTracks.forEach(
             (element,index,array)=>{
