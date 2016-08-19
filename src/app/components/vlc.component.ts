@@ -223,8 +223,9 @@ export class VLCComponent implements OnInit{
 
         const media:Media  = new this.Media(this.libVLC, android.net.Uri.parse(this.videoPath));
         //************************************
-        //TODO: get SW or HW from user
-        org.videolan.vlc.util.VLCOptions.setMediaOptions(media, 0, org.videolan.vlc.util.VLCOptions.HW_ACCELERATION_AUTOMATIC);
+
+        //third argument (flags) is 0 because vlc for android did this. 
+        org.videolan.vlc.util.VLCOptions.setMediaOptions(media ,application.android.currentContext , 0);
         //****************************************
 
         //*********************************
@@ -513,7 +514,7 @@ export class VLCComponent implements OnInit{
           }
       }))
 
-    this.libVLC = new this.LibVLC(org.videolan.vlc.util.VLCOptions.getLibOptions());
+    this.libVLC = new this.LibVLC(org.videolan.vlc.util.VLCOptions.getLibOptions(application.android.currentContext));
 
     this.audioManager =  this.activity.getSystemService(this.context.AUDIO_SERVICE);
     this.maxVolume = this.audioManager.getStreamMaxVolume(this.AudioManager.STREAM_MUSIC);

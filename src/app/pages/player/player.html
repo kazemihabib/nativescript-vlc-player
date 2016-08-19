@@ -12,7 +12,7 @@
     </DropDown>
   </StackLayout>
   <StackLayout>
-    <vlc #vlcElement [eventCallback] = "eventCallback" [videoPath] = "path" [lastPosition]="position"
+    <vlc #vlcElement [videoPath] = "path" [lastPosition]="position"
     [aspectRatio]="currentAspectRatio" [audioTrack]="currentAudioTrack"
     (loaded)="onLoaded(vlcElement)"
     (eventHardwareAccelerationError)="eventHardwareAccelerationError()"
