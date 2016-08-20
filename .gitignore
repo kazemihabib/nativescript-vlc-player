@@ -64,3 +64,5 @@ src/lib
 src/platforms
 src/hooks
 src/node_modules
+
+!support/postinstall.js
