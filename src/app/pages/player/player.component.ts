@@ -29,10 +29,10 @@ export class playerPage implements OnInit{
     public dd:any;
 
     eventHardwareAccelerationError = function(){
-        console.log("eventHardwareAccelerationError");
+        console.log("event: eventHardwareAccelerationError");
     }
     eventPlaying = function(){
-        console.log('in appComponent : Playing');
+        console.log('event : Playing');
     }
 
     eventParsedChanged = function(){
@@ -57,14 +57,12 @@ export class playerPage implements OnInit{
     }
 
     onLoaded(vlc){
-      console.log('onLoaded is called');
       this.vlc = vlc;
       this.vlcAction = this.vlc.getVLCAction();
     }
     constructor(private route: ActivatedRoute){}
 
     ngOnDestroy() {
-      console.log('onDestroy is called');
       this.sub.unsubscribe();
     }
     ngOnInit(){
@@ -104,11 +102,8 @@ export class playerPage implements OnInit{
 
     public up(){
       let obj = this.vlcAction.volumeUp();
-      console.log('currentVolume :');
-      console.log(obj.currentVolume);
-      console.log('maxVolume');
-      console.log(obj.maxVolume);
-
+      console.log('currentVolume : ' + obj.currentVolume);
+      console.log('maxVolume ' + obj.maxVolume);
     }
 
     public save(){
@@ -117,7 +112,7 @@ export class playerPage implements OnInit{
 
     public changeAspectRatio(){
       let currentAspectRatio = this.vlc.getCurrentAspectRatioItem();
-      console.log(currentAspectRatio.name);
+      console.log('currentAspectRatio' + currentAspectRatio.name);
       this.currentAspectRatio = (currentAspectRatio.value + 1) % 7;
     }
 

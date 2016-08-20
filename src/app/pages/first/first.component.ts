@@ -23,15 +23,15 @@ export class firstPage{
 
    public ngOnInit(){
 
-    console.log(VLCSettings.hardwareAcceleration);
-    console.log(VLCSettings.networkCachingValue)
+    console.log('hardwareAcceleration before set settings: ' +VLCSettings.hardwareAcceleration);
+    console.log('netowrkCachingValue before set settings: ' + VLCSettings.networkCachingValue)
     
     VLCSettings.hardwareAcceleration = HW.HW_ACCELERATION_DISABLED;
     VLCSettings.networkCachingValue = 3000;
 
 
-    console.log(VLCSettings.hardwareAcceleration);
-    console.log(VLCSettings.networkCachingValue)
+    console.log('hardwareAcceleration after set settings: ' + VLCSettings.hardwareAcceleration);
+    console.log('networkCachingValue after set settings: ' + VLCSettings.networkCachingValue)
    }
 
 
