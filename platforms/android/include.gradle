@@ -1,0 +1,12 @@
+//default elements
+android {
+    productFlavors {
+        "nativescriptng2vlcplayer" {
+            dimension "nativescriptng2vlcplayer"
+        }
+    }
+}
+
+dependencies {
+    compile "de.mrmaffen:vlc-android-sdk:1.9.8"
+}
