@@ -1,32 +1,38 @@
 "use strict";
 
-var fs = require('fs-extra');
+var fs = require('fs');
 var path = require('path');
-function copyFiles(src,dest,forceOverWrite){
- try{
-    fs.emptyDirSync(path.dirname(dest));
-    console.log('empty dest folder done');
-  } catch(err){
-    console.log(err);
-  }
+var pathSep = require('path').sep;
 
-  try {
-    fs.copySync(src, dest)
-    console.log("copy to dest done")
-  } catch (err) {
-    console.error(err)
-  } 
+function mkdir(path){
+	var dirs = path.split(pathSep);
+	var root = "";
+	while (dirs.length > 0) {
+		var dir = dirs.shift();
+		if (dir === "") {// If directory starts with a /, the first path will be an empty string.
+			root = pathSep;
+		}
+		if (!fs.existsSync(root + dir)) {
+			fs.mkdirSync(root + dir);
+		}
+		root += dir + pathSep;
+	}
+};
+
+
+function copyFile(src, dest, forceOverWrite) {
+    var dirname = path.dirname(dest);
+    mkdir(dirname); 
+
+    if (!forceOverWrite && fs.existsSync(dest)) return;
+    var buffer = fs.readFileSync(src);
+    fs.writeFileSync(dest, buffer);
+
+    clean();
 }
 
-function cleanupFiles() {
-    try{
-        fs.removeSync(__dirname + '/org');
-        console.log('./org dir removed');
-    }catch(error){
-        console.log(err);
-    }
+function clean(){
+  fs.unlinkSync(__dirname + "/VLCOptions.java"); 
 }
 
-
-copyFiles(__dirname + "/org/videolan/vlc/util/VLCOptions.java" ,path.resolve("../../platforms/android/src/main/java/org/videolan/vlc/util/VLCOptions.java"));
-cleanupFiles();
+copyFile(__dirname + '/VLCOptions.java',path.resolve("../../platforms/android/src/main/java/org/videolan/vlc/util/VLCOptions.java"),true);
