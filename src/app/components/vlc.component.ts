@@ -31,7 +31,12 @@ type AudioManager = any; //android.media.AudioManager;
 
 @Component({
     selector: "vlc",
-    templateUrl: "./components/vlc.component.html",
+    template:
+    `
+        <StackLayout>
+            <Placeholder #surface *ngIf="init" (creatingView)="createVLCSurface($event)" (loaded)="onLoaded(surface)" ></Placeholder>
+        </StackLayout>
+    `
 })
 export class VLCComponent implements OnInit{
 
