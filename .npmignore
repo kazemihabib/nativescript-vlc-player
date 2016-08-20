@@ -66,3 +66,7 @@ typings
 .editorconfig
 *.png
 resources
+
+shouldBeIgnoredDirctory 
+.vscode
+src/app/components/vlc.d.ts

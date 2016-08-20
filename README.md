@@ -1,17 +1,14 @@
 # nativescript-vlc-player
 nativescript vlc player plugin for NS-Angular2
 
-## THIS PLUGIN IS NOT READY YET
+platforms:
+  1-Android
 
-## TODO:
-  ```
-    1-add PlayerControl
-    2-subtitleSurfaceView
-  ```
+Sample Usage:
+  https://github.com/kazemihabib/nativescript-vlc-player/tree/master/src/app
 
+Documentation:
+  SOON ...   
 
-## ISSUES:
-  ```
-    1-AspectRatio becomes Original Surface after orientation
-    2-TO FIX THIS ISSUE USE android@next ~~Media Events and MediaPlayer Events throw exception !!~~
-  ```
+Just NativeScript without Angular:
+  SOON ...
