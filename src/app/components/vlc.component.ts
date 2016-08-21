@@ -6,6 +6,8 @@
   ISSUES:
     1-AspectRatio becomes Original Surface when navigation
 */
+
+
 import {Component,OnInit,ViewChild,ElementRef,AfterViewInit,Input,Output,EventEmitter} from "@angular/core";
 import {View} from "ui/core/view";
 import placeholder = require("ui/placeholder");
@@ -122,11 +124,11 @@ export class VLCComponent implements OnInit{
     ]
 
 
+    _videoPath:string="";
     mHasAudioFocus : boolean = false;
     private _lastPosition:number = 0;
     private _audioTracks = new Array<{id:number,name:string}>();
 
-    get lastPosition():number{return this._lastPosition};
     public getCurrentAspectRatioItem():{value:number,name:string} {return this._currentAspectRatioItem};
     public getAudioTracks():{id:number,name:string}[]{
       return this._audioTracks;
@@ -134,11 +136,19 @@ export class VLCComponent implements OnInit{
     //@Inputs
 
     @Input()
-    public videoPath:string;
+    set videoPath(videoPath:string){
+        this._videoPath = videoPath.trim();
+    }
+
+    get videoPath():string{
+       return this._videoPath; 
+    }
     @Input()
     set lastPosition(lastPosition: number) {
       this._lastPosition = lastPosition;
     }
+
+    get lastPosition():number{return this._lastPosition};
 
     @Input()
     set aspectRatio(aspectRatio:number){

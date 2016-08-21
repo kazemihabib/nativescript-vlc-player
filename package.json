@@ -1,6 +1,6 @@
 {
   "name": "nativescript-ng2-vlc-player",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "nativescript ng2 vlc player plugin",
   "main": "nativescript-ng2-vlc-player.js",
   "typings": "nativescript-ng2-vlc-player.d.ts",
