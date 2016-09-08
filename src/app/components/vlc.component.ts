@@ -355,14 +355,8 @@ export class VLCComponent implements OnInit{
           switch (focusChange) {
               case __this.AudioManager.AUDIOFOCUS_LOSS:
                   __this.changeAudioFocus(false);
-                   const media : Media = __this.mediaPlayer.getMedia();
-                  if (media != null) {
-                      media.setEventListener(null);
-                      __this.mediaPlayer.setEventListener(null);
-                      __this.mediaPlayer.stop();
-                      __this.mediaPlayer.setMedia(null);
-                       media.release();
-                  }
+                  __this.mediaPlayer.pause();
+
                   break;
               case __this.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                   if (__this.mediaPlayer.isPlaying()) {
