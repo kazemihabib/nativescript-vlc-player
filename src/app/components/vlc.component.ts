@@ -672,7 +672,18 @@ export class VLCComponent implements OnInit{
               }
           }
       },
-
+      setVolume:(value:number): {'currentVolume':number,'maxVolume':number} =>{
+          let __this = this;
+          if (this.audioManager != null) {
+              let newVolume = Math.min(value, this.maxVolume);
+              newVolume = Math.max(newVolume, 0);
+              this.audioManager.setStreamVolume(this.AudioManager.STREAM_MUSIC, newVolume, 0);
+              return {
+                'currentVolume': newVolume,
+                'maxVolume':__this.maxVolume
+              }
+          }
+      },
       getVolume:(): {'currentVolume':number,'maxVolume':number} => { 
           let __this = this;
 

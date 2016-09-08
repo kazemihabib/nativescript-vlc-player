@@ -59,6 +59,8 @@ export class playerPage implements OnInit{
     onLoaded(vlc){
       this.vlc = vlc;
       this.vlcAction = this.vlc.getVLCAction();
+      let newVolume = Math.floor(this.vlcAction.getVolume().maxVolume/2);
+      this.vlcAction.setVolume(newVolume);
       console.dump(this.vlcAction.getVolume());
     }
     constructor(private route: ActivatedRoute){}
