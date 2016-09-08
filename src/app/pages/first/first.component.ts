@@ -34,5 +34,12 @@ export class firstPage{
     console.log('networkCachingValue after set settings: ' + VLCSettings.networkCachingValue)
    }
 
+    public loaded(){
+      console.log('first.component loaded');
+    }
+
+    public unLoaded(){
+      console.log('first.component unloaded');
+    }
 
 }

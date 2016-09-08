@@ -59,6 +59,7 @@ export class playerPage implements OnInit{
     onLoaded(vlc){
       this.vlc = vlc;
       this.vlcAction = this.vlc.getVLCAction();
+      console.dump(this.vlcAction.getVolume());
     }
     constructor(private route: ActivatedRoute){}
 
@@ -120,5 +121,14 @@ export class playerPage implements OnInit{
     public onchange(indx){
         this.currentAudioTrack = this.items[indx];
     }
+
+    public loaded(){
+      console.log('player.component loaded');
+    }
+
+    public unLoaded(){
+      console.log('player.component unloaded');
+    }
+
 
 }
