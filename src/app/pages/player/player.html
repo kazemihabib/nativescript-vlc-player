@@ -1,5 +1,5 @@
-<StackLayout (loaded)="loaded()" (unloaded)="unLoaded()">
-  <StackLayout orientation="horizontal">
+<GridLayout rows="auto,*" (loaded)="loaded()" (unloaded)="unLoaded()">
+  <StackLayout orientation="horizontal" row="0">
     <Button text="play" (tap)="vlcAction.play()"></Button>
     <Button text="pause" (tap)="vlcAction.pause()"></Button>
     <Button text="seek 5s" (tap)="vlcAction.seek(vlcAction.getPosition()+5000)"></Button>
@@ -11,13 +11,13 @@
       row="0" colSpan="2">
     </DropDown>
   </StackLayout>
-  <StackLayout>
-    <vlc #vlcElement [videoPath] = "path" [lastPosition]="position"
-    [aspectRatio]="currentAspectRatio" [audioTrack]="currentAudioTrack"
-    (loaded)="onLoaded(vlcElement)"
-    (eventHardwareAccelerationError)="eventHardwareAccelerationError()"
-    (eventPlaying) = "eventPlaying()"
-    (eventParsedChanged) = "eventParsedChanged()"
-    ></vlc>
-  </StackLayout>
-</StackLayout>
+  <GridLayout row="1" backgroundColor="black">
+        <vlc #vlcElement   [videoPath] = "path" [lastPosition]="position" horizontalAlignment="center" verticalAlignment="center" 
+        [aspectRatio]="currentAspectRatio" [audioTrack]="currentAudioTrack"
+        (loaded)="onLoaded(vlcElement)"
+        (eventHardwareAccelerationError)="eventHardwareAccelerationError()"
+        (eventPlaying) = "eventPlaying()"
+        (eventParsedChanged) = "eventParsedChanged()"
+        ></vlc>
+  </GridLayout>
+</GridLayout>

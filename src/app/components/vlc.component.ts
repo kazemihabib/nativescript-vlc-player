@@ -35,9 +35,7 @@ type AudioManager = any; //android.media.AudioManager;
     selector: "vlc",
     template:
     `
-        <StackLayout (loaded)="vlcLoaded(stack)" (unloaded)="vlcUnLoaded()">
-            <Placeholder #surface *ngIf="init" (creatingView)="createVLCSurface($event)" (loaded)="onLoaded(surface)" ></Placeholder>
-        </StackLayout>
+       <Placeholder #surface *ngIf="init" (creatingView)="createVLCSurface($event)" (loaded)="vlcLoaded(surface)" (unloaded)="vlcUnLoaded()" ></Placeholder>
     `
 })
 export class VLCComponent implements OnInit{
@@ -192,8 +190,17 @@ export class VLCComponent implements OnInit{
       return this.vlcAction;
     }
 
-    onLoaded(surface){
-      this.playerSurfaceView = surface.android;
+    vlcLoaded(surface){
+        this.playerSurfaceView = surface.android;
+        application.on(application.orientationChangedEvent, (args)=>{
+                this.changeSurfaceLayout();
+        },this);
+    }
+
+    vlcUnLoaded() {
+        application.off(application.orientationChangedEvent, (args)=>{
+            this.changeSurfaceLayout();
+        },this);
     }
 
 
@@ -698,17 +705,6 @@ export class VLCComponent implements OnInit{
             this._audioTracks.push({id:item.id,name:item.name});
     }
 
-    vlcLoaded(stack) {
-        application.on(application.orientationChangedEvent, (args)=>{
-            this.changeSurfaceLayout();
-        },this);
 
-    };
-
-    vlcUnLoaded() {
-        application.off(application.orientationChangedEvent, (args)=>{
-            this.changeSurfaceLayout();
-        },this);
-    }
 
 }
