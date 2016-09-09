@@ -35,7 +35,7 @@ type AudioManager = any; //android.media.AudioManager;
     selector: "vlc",
     template:
     `
-        <StackLayout>
+        <StackLayout (loaded)="vlcLoaded(stack)" (unloaded)="vlcUnLoaded()">
             <Placeholder #surface *ngIf="init" (creatingView)="createVLCSurface($event)" (loaded)="onLoaded(surface)" ></Placeholder>
         </StackLayout>
     `
@@ -690,13 +690,25 @@ export class VLCComponent implements OnInit{
           }
       }
 
-    
+    };
 
-};
+    private initAudioTracks(){
+        let audioTracks = this.mediaPlayer.getAudioTracks();
+        for(let item of audioTracks)
+            this._audioTracks.push({id:item.id,name:item.name});
+    }
 
-private initAudioTracks(){
-  let audioTracks = this.mediaPlayer.getAudioTracks();
-  for(let item of audioTracks)
-    this._audioTracks.push({id:item.id,name:item.name});
- }
+    vlcLoaded(stack) {
+        application.on(application.orientationChangedEvent, (args)=>{
+            this.changeSurfaceLayout();
+        },this);
+
+    };
+
+    vlcUnLoaded() {
+        application.off(application.orientationChangedEvent, (args)=>{
+            this.changeSurfaceLayout();
+        },this);
+    }
+
 }
