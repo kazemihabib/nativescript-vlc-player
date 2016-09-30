@@ -67,3 +67,6 @@ src/node_modules
 
 !support/postinstall.js
 shouldBeIgnoredDirctory/
+
+!preparepublish.js
+!preparedevelop.js

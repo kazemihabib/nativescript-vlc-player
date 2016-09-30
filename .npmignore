@@ -70,3 +70,8 @@ resources
 shouldBeIgnoredDirctory 
 .vscode
 src/app/components/vlc.d.ts
+
+preparepublish.js
+preparedevelop.js
+publishpackage.json
+developpackage.json
