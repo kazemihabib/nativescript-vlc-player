@@ -701,6 +701,8 @@ export class VLCComponent implements OnInit{
 
     private initAudioTracks(){
         let audioTracks = this.mediaPlayer.getAudioTracks();
+        if(audioTracks == null) return; 
+        //this will throw error if audioTracks is null
         for(let item of audioTracks)
             this._audioTracks.push({id:item.id,name:item.name});
     }
