@@ -169,4 +169,4 @@ import {chroma,HW,deblocking} from "nativescript-ng2-vlc-player/nativescript-ng2
   SOON ...
 
 ## License
-  [MIT](https://opensource.org/licenses/MIT)
+  [GPLv3](https://github.com/kazemihabib/nativescript-vlc-player/blob/master/LICENSE)
